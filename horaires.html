@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LFTV - Horaires</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Palette de couleurs -->
+    <link rel="stylesheet" href="src/css/styles.css">
+    <link rel="stylesheet" href="src/css/horaires.css">
+    <!-- Tui Calendar -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.min.css" />
+</head>
+
+<body>
+    <header>
+        <nav>
+            <div class="menu-gauche">
+                <img src="src/assets/LFTV.png" alt="Logo LFTV" class="logo">
+                <a href="#" id="nav-accueil">Accueil</a>
+                <a href="horaires.html" id="nav-horaires">Horaires</a>
+                <a href="#" id="nav-emissions">Émissions</a>
+                <a href="#" id="nav-programmes">Programmes</a>
+            </div>
+            <div class="menu-droite">
+                <a href="#" id="nav-connexion"><i class="fa-regular fa-user"></i> Connexion</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Horaires de la semaine</h1>
+        <div id="calendar" style="background:var(--color-bg-card); border-radius:16px; padding:10px;"></div>
+        <!-- Modal pour le détail d’une émission -->
+        <div id="modal-emission" class="modal" style="display:none;">
+            <div class="modal-content">
+                <span class="close-btn" id="close-modal">&times;</span>
+                <div id="modal-details"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <!-- Tui Calendar JS -->
+    <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.min.js"></script>
+    <script src="js/horaires.js"></script>
+</body>
+
+</html>

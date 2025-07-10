@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <title>LFTV - Accueil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Style principal -->
+    <!-- Feuille de styles principale -->
     <link rel="stylesheet" href="src/css/styles.css">
-    <!-- Icônes (Font Awesome CDN) -->
+    <!-- Icônes Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-    <!-- Calendrier (FullCalendar) -->
-    <link rel="stylesheet" href="calendars/fullcalendar.min.css">
+    <!-- Favicon (optionnel) -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
 </head>
 
 <body>
     <header>
-        <nav>
+        <nav class="navbar">
             <div class="menu-gauche">
                 <img src="src/assets/LFTV.png" alt="Logo LFTV" class="logo">
                 <a href="#" id="nav-accueil">Accueil</a>
@@ -24,29 +24,22 @@
                 <a href="#" id="nav-programmes">Programmes</a>
             </div>
             <div class="menu-droite">
-                <a href="#" id="nav-connexion"><i class="fa-regular fa-user"></i> Connexion</a>
+                <a href="#" id="nav-connexion">
+                    <i class="fa-regular fa-user"></i>
+                    Connexion
+                </a>
             </div>
         </nav>
     </header>
-    <main>
-        <section class="now-watching" id="now-watching">
-            <!-- Carré principal “Vous regardez maintenant” généré par JS -->
-        </section>
-    
-        <section class="emissions-today">
-            <h2>Émissions du jour</h2>
-            <ul id="emission-list">
-                <!-- Liste des émissions générée par JS -->
-            </ul>
-            <div id="no-emission-message" class="no-emission" style="display:none;">
-                Aucune émission prévue pour aujourd'hui.
-            </div>
-        </section>
-        </main>
-    <script src="calendars/fullcalendar.min.js"></script>
-    <script src="src/js/config.js"></script>
+    <main id="app">
+        <!-- Le contenu dynamique des pages s'affichera ici -->
+    </main>
+    <footer>
+        <div class="footer-content">
+            <span>&copy; 2025 LFTV. Tous droits réservés.</span>
+        </div>
+    </footer>
     <script src="src/js/main.js"></script>
-    <script src="src/js/accueil.js"></script>
 </body>
 
 </html>
