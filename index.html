@@ -3,43 +3,42 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>LFTV - Accueil</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Feuille de styles principale -->
-    <link rel="stylesheet" href="src/css/styles.css">
-    <!-- Icônes Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-    <!-- Favicon (optionnel) -->
-    <link rel="icon" type="image/png" href="assets/logo.png">
+    <title>LFTV - Accueil</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="menu-gauche">
-                <img src="src/assets/LFTV.png" alt="Logo LFTV" class="logo">
-                <a href="#" id="nav-accueil">Accueil</a>
-                <a href="#" id="nav-horaires">Horaires</a>
-                <a href="#" id="nav-emissions">Émissions</a>
-                <a href="#" id="nav-programmes">Programmes</a>
-            </div>
-            <div class="menu-droite">
-                <a href="#" id="nav-connexion">
-                    <i class="fa-regular fa-user"></i>
-                    Connexion
-                </a>
-            </div>
-        </nav>
-    </header>
-    <main id="app">
-        <!-- Le contenu dynamique des pages s'affichera ici -->
-    </main>
-    <footer>
-        <div class="footer-content">
-            <span>&copy; 2025 LFTV. Tous droits réservés.</span>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="logo">LFTV</div>
+        <ul class="menu">
+            <li><a href="#">Accueil</a></li>
+            <li><a href="pages/horaires.html">Horaires</a></li>
+            <li><a href="pages/emissions.html">Emissions</a></li>
+            <li><a href="pages/horaires.html">Programmes</a></li>
+        </ul>
+        <div class="connections">
+            <a href="#" class="connexion-icon">Connexion</a>
         </div>
-    </footer>
-    <script src="src/js/main.js"></script>
-</body>
+    </nav>
 
+    <!-- Section principale -->
+    <main>
+        <section class="current-broadcast">
+            <h1>Vous regardez maintenant :</h1>
+            <div class="broadcast-box">
+                <img src="images/current-show.jpg" alt="Émission en cours">
+                <a href="#" class="watch-now-btn">Regarder maintenant</a>
+            </div>
+            <ul class="today-schedule">
+                <!-- Liste des émissions du jour avec horaires -->
+                <li>08:00 - Emission Matinale</li>
+                <li>12:00 - Déjeuner TV</li>
+                <li>18:00 - Soirée Culture</li>
+            </ul>
+        </section>
+    </main>
+    <script src="js/api.js"></script>
+</body>
 </html>

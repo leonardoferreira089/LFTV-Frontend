@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LFTV - Programmes</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="logo">LFTV</div>
+        <ul class="menu">
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="./horaires.html">Horaires</a></li>
+            <li><a href="./emissions.html">Émissions</a></li>
+            <li><a href="./programmes.html">Programmes</a></li>
+        </ul>
+        <div class="connections">
+            <a href="../connexion.html" class="connexion-icon">Connexions</a>
+        </div>
+    </nav>
+
+    <!-- Section principale -->
+    <main>
+        <section class="programmes-section">
+            <h1>Catalogue des Programmes</h1>
+
+            <!-- Formulaire pour créer un nouveau programme -->
+            <form id="create-programme-form">
+                <h2>Ajouter un nouveau programme</h2>
+                <label for="name">Nom du programme :</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="type">Type :</label>
+                <input type="text" id="type" name="type" required>
+
+                <label for="category">Catégorie :</label>
+                <input type="text" id="category" name="category" required>
+
+                <label for="imageUrl">URL de l'image :</label>
+                <input type="url" id="imageUrl" name="imageUrl">
+
+                <label for="episodeUrl">URL de l'épisode :</label>
+                <input type="url" id="episodeUrl" name="episodeUrl">
+
+                <button type="submit">Ajouter</button>
+            </form>
+
+            <!-- Liste des programmes -->
+            <h2>Liste des programmes existants</h2>
+            <ul id="programmes-list">
+                <!-- Les programmes seront générés dynamiquement -->
+            </ul>
+        </section>
+    </main>
+
+    <script src="../js/programmes.js"></script>
+</body>
+
+</html>

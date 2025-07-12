@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LFTV - Horaires</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="logo">LFTV</div>
+        <ul class="menu">
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="./horaires.html">Horaires</a></li>
+            <li><a href="./emissions.html">Emissions</a></li>
+            <li><a href="./programmes.html">Programmes</a></li>
+        </ul>
+        <div class="connections">
+            <a href="../connexion.html" class="connexion-icon">Connexions</a>
+        </div>
+    </nav>
+
+    <!-- Section principale -->
+    <main>
+        <section class="weekly-schedule">
+            <h1>Horaires des Émissions</h1>
+            <table id="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Jour</th>
+                        <th>Émission</th>
+                        <th>Début</th>
+                        <th>Fin</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Les lignes du tableau seront générées dynamiquement -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../js/horaires.js"></script>
+</body>
+
+</html>

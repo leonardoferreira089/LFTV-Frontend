@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LFTV - Émissions</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="logo">LFTV</div>
+        <ul class="menu">
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="./horaires.html">Horaires</a></li>
+            <li><a href="./emissions.html">Émissions</a></li>
+            <li><a href="./programmes.html">Programmes</a></li>
+        </ul>
+        <div class="connections">
+            <a href="../connexion.html" class="connexion-icon">Connexions</a>
+        </div>
+    </nav>
+
+    <!-- Section principale -->
+    <main>
+        <section class="emissions-section">
+            <h1>Catalogue des Émissions</h1>
+
+            <!-- Formulaire pour créer une nouvelle émission -->
+            <form id="create-emission-form">
+                <h2>Ajouter une nouvelle émission</h2>
+                <label for="name">Nom :</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="date">Date :</label>
+                <input type="date" id="date" name="date" required>
+
+                <label for="startTime">Heure de début :</label>
+                <input type="time" id="startTime" name="startTime" required>
+
+                <label for="endTime">Heure de fin :</label>
+                <input type="time" id="endTime" name="endTime" required>
+
+                <label for="imageUrl">URL de l'image :</label>
+                <input type="url" id="imageUrl" name="imageUrl">
+
+                <button type="submit">Ajouter</button>
+            </form>
+
+            <!-- Liste des émissions -->
+            <h2>Liste des émissions existantes</h2>
+            <ul id="emissions-list">
+                <!-- Les émissions seront générées dynamiquement -->
+            </ul>
+        </section>
+    </main>
+
+    <script src="../js/emissions.js"></script>
+</body>
+
+</html>
