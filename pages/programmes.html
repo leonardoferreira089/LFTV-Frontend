@@ -19,7 +19,7 @@
             <li><a href="./programmes.html">Programmes</a></li>
         </ul>
         <div class="connections">
-            <a href="../connexion.html" class="connexion-icon">Connexions</a>
+            <a href="./connexion.html" class="connexion-icon">Connexion</a>
         </div>
     </nav>
 
@@ -40,11 +40,16 @@
                 <label for="category">Catégorie :</label>
                 <input type="text" id="category" name="category" required>
 
-                <label for="imageUrl">URL de l'image :</label>
-                <input type="url" id="imageUrl" name="imageUrl">
+                <label for="emissionId">Émission :</label>
+                <select id="emissionId" name="emissionId" required>
+                    <!-- Les options seront générées dynamiquement -->
+                </select>
 
                 <label for="episodeUrl">URL de l'épisode :</label>
                 <input type="url" id="episodeUrl" name="episodeUrl">
+
+                <label for="imageUrl">URL de l'image :</label>
+                <input type="url" id="imageUrl" name="imageUrl">
 
                 <button type="submit">Ajouter</button>
             </form>

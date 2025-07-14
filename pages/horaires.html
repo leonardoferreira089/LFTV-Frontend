@@ -19,29 +19,24 @@
             <li><a href="./programmes.html">Programmes</a></li>
         </ul>
         <div class="connections">
-            <a href="../connexion.html" class="connexion-icon">Connexions</a>
+            <a href="./connexion.html" class="connexion-icon">Connexion</a>
         </div>
     </nav>
 
     <!-- Section principale -->
-    <main>
-        <section class="weekly-schedule">
-            <h1>Horaires des Émissions</h1>
-            <table id="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Jour</th>
-                        <th>Émission</th>
-                        <th>Début</th>
-                        <th>Fin</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Les lignes du tableau seront générées dynamiquement -->
-                </tbody>
-            </table>
+    <main id="app">
+        <section>
+            <h1>Horaires de la semaine</h1>
+            <div id="calendar-table-container">
+                <!-- Le tableau des horaires sera inséré ici -->
+            </div>
         </section>
     </main>
+    <footer>
+        <div class="footer-content">
+            <span>&copy; 2025 LFTV. Tous droits réservés.</span>
+        </div>
+    </footer>
 
     <script src="../js/horaires.js"></script>
 </body>

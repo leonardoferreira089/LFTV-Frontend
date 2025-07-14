@@ -1,10 +1,29 @@
 // URL de base de l'API
-const API_BASE_URL = "https://localhost:7279/api/ProgramContent";
+const API_BASE_URL = "https://localhost:7279/api";
+
+// Fonction pour récupérer toutes les émissions
+async function fetchEmissionsForForm() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/Emission`);
+    if (!response.ok) throw new Error("Erreur lors de la récupération des émissions.");
+    const emissions = await response.json();
+    const emissionSelect = document.getElementById("emissionId");
+    emissions.forEach(emission => {
+      const option = document.createElement("option");
+      option.value = emission.id;
+      option.textContent = `${emission.name} (${new Date(emission.date).toLocaleDateString()})`;
+      emissionSelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error(error.message);
+    alert("Impossible de charger les émissions.");
+  }
+}
 
 // Fonction pour récupérer tous les programmes
 async function fetchProgrammes() {
   try {
-    const response = await fetch(API_BASE_URL);
+    const response = await fetch(`${API_BASE_URL}/ProgramContent`);
     if (!response.ok) throw new Error("Erreur lors du chargement des programmes.");
     const programmes = await response.json();
     updateProgrammesList(programmes);
@@ -17,7 +36,7 @@ async function fetchProgrammes() {
 // Fonction pour ajouter un nouveau programme
 async function createProgramme(programmeData) {
   try {
-    const response = await fetch(API_BASE_URL, {
+    const response = await fetch(`${API_BASE_URL}/ProgramContent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(programmeData),
@@ -33,28 +52,12 @@ async function createProgramme(programmeData) {
 // Fonction pour supprimer un programme
 async function deleteProgramme(programmeId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/${programmeId}`, { method: "DELETE" });
+    const response = await fetch(`${API_BASE_URL}/ProgramContent/${programmeId}`, { method: "DELETE" });
     if (!response.ok) throw new Error("Erreur lors de la suppression du programme.");
     fetchProgrammes(); // Recharger la liste après suppression
   } catch (error) {
     console.error(error.message);
     alert("Impossible de supprimer le programme.");
-  }
-}
-
-// Fonction pour mettre à jour un programme
-async function updateProgramme(programmeId, programmeData) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/${programmeId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(programmeData),
-    });
-    if (!response.ok) throw new Error("Erreur lors de la mise à jour du programme.");
-    fetchProgrammes(); // Recharger la liste après mise à jour
-  } catch (error) {
-    console.error(error.message);
-    alert("Impossible de mettre à jour le programme.");
   }
 }
 
@@ -69,8 +72,8 @@ function updateProgrammesList(programmes) {
       <h3>${programme.name}</h3>
       <p>Type : ${programme.type}</p>
       <p>Catégorie : ${programme.category}</p>
+      <p>Émission associée : ${programme.emissionName || "Non spécifié"}</p>
       <button onclick="deleteProgramme(${programme.id})">Supprimer</button>
-      <button onclick="showUpdateForm(${programme.id})">Modifier</button>
     `;
     programmesList.appendChild(listItem);
   });
@@ -89,11 +92,15 @@ document.getElementById("create-programme-form").addEventListener("submit", (eve
     name: event.target.name.value,
     type: event.target.type.value,
     category: event.target.category.value,
-    imageUrl: event.target.imageUrl.value,
+    emissionId: parseInt(event.target.emissionId.value), // Inclure EmissionId
     episodeUrl: event.target.episodeUrl.value,
+    imageUrl: event.target.imageUrl.value,
   };
   createProgramme(programmeData);
 });
 
-// Charger les programmes au démarrage
-document.addEventListener("DOMContentLoaded", fetchProgrammes);
+// Charger les émissions et les programmes au démarrage
+document.addEventListener("DOMContentLoaded", () => {
+  fetchEmissionsForForm();
+  fetchProgrammes();
+});

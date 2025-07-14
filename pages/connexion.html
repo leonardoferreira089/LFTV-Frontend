@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LFTV - Connexions</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <!-- Barre de navigation -->
+    <nav class="navbar">
+        <div class="logo">LFTV</div>
+        <ul class="menu">
+            <li><a href="../index.html">Accueil</a></li>
+            <li><a href="./horaires.html">Horaires</a></li>
+            <li><a href="./emissions.html">Émissions</a></li>
+            <li><a href="./programmes.html">Programmes</a></li>
+        </ul>
+        <div class="connections">
+            <a href="./connexion.html" class="connexion-icon">Connexions</a>
+        </div>
+    </nav>
+
+    <!-- Section principale -->
+    <main class="auth-container">
+        <section class="auth-card">
+            <h1>Connexion</h1>
+            <form id="form-connexion">
+                <label>Email :
+                    <input type="email" name="email" placeholder="Votre email" required>
+                </label>
+                <label>Mot de passe :
+                    <input type="password" name="password" placeholder="Votre mot de passe" required>
+                </label>
+                <button type="submit" class="btn">Se connecter</button>
+            </form>
+            <p class="auth-links">
+                <a href="inscription.html">Créer un compte</a> |
+                <a href="#" id="forgot-password">Mot de passe oublié ?</a>
+            </p>
+        </section>
+    </main>
+
+    <script src="../js/connexion.js"></script>
+</body>
+
+</html>

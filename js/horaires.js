@@ -1,75 +1,61 @@
-// URL de base de l'API
-const API_BASE_URL = "https://localhost:7279/api";
+const API_URL = "https://localhost:7279/api/CalendarEntry";
 
-// Fonction pour charger les horaires des émissions
-async function fetchWeeklySchedule() {
-  try {
-    // Appel à l'API pour récupérer toutes les émissions
-    const response = await fetch(`${API_BASE_URL}/Emission`);
+async function chargerHoraires() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) throw new Error("Erreur lors du chargement des horaires");
+        return await response.json();
+    } catch (e) {
+        console.error(e);
+        return [];
+    }
+}
 
-    // Vérification du statut de la réponse
-    if (!response.ok) {
-      throw new Error("Erreur lors du chargement des horaires.");
+async function afficherHoraires() {
+    const container = document.getElementById("calendar-table-container");
+    container.innerHTML = '<p class="horaires-loading">Chargement des horaires...</p>';
+
+    const horaires = await chargerHoraires();
+
+    if (!horaires || horaires.length === 0) {
+        container.innerHTML = '<p class="horaires-loading">Aucun horaire disponible.</p>';
+        return;
     }
 
-    // Conversion de la réponse en JSON
-    const emissions = await response.json();
+    const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
+    const horairesParJour = {};
 
-    // Mise à jour de l'interface utilisateur
-    updateScheduleTable(emissions);
-  } catch (error) {
-    console.error(error.message);
-    displayErrorMessage("Impossible de charger les horaires des émissions.");
-  }
+    // Regrouper les horaires par jour
+    jours.forEach(j => horairesParJour[j] = []);
+    horaires.forEach(horaire => {
+        const jour = jours[horaire.day - 1]; // day est basé sur 1 (Lundi=1, etc.)
+        if (jour) {
+            horairesParJour[jour].push({
+                heure: horaire.startTime,
+                titre: horaire.title
+            });
+        }
+    });
+
+    // Créer le tableau HTML
+    let html = '<table class="horaires-table"><thead><tr><th>Heure</th>';
+    jours.forEach(j => html += `<th>${j}</th>`);
+    html += '</tr></thead><tbody>';
+
+    // Trouver toutes les heures uniques
+    const toutesLesHeures = [...new Set(horaires.map(h => h.startTime))].sort();
+
+    toutesLesHeures.forEach(heure => {
+        html += `<tr><td>${heure}</td>`;
+        jours.forEach(jour => {
+            const programme = horairesParJour[jour].find(p => p.heure === heure);
+            html += `<td>${programme ? programme.titre : ''}</td>`;
+        });
+        html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
 }
 
-// Fonction pour mettre à jour le tableau des horaires
-function updateScheduleTable(emissions) {
-  const tableBody = document.querySelector("#schedule-table tbody");
-  tableBody.innerHTML = ""; // Vidage du tableau existant
-
-  // Grouper les émissions par jour
-  const daysOfWeek = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-  const groupedEmissions = groupByDay(emissions);
-
-  // Générer les lignes du tableau pour chaque jour
-  daysOfWeek.forEach((day) => {
-    const dailyEmissions = groupedEmissions[day] || [];
-    if (dailyEmissions.length === 0) {
-      tableBody.innerHTML += `<tr><td>${day}</td><td colspan="3">Aucune émission</td></tr>`;
-    } else {
-      dailyEmissions.forEach((emission, index) => {
-        tableBody.innerHTML += `
-          <tr>
-            ${index === 0 ? `<td rowspan="${dailyEmissions.length}">${day}</td>` : ""}
-            <td>${emission.name}</td>
-            <td>${emission.startTime}</td>
-            <td>${emission.endTime}</td>
-          </tr>
-        `;
-      });
-    }
-  });
-}
-
-// Fonction pour grouper les émissions par jour
-function groupByDay(emissions) {
-  const grouped = {};
-  emissions.forEach((emission) => {
-    const day = new Date(emission.date).toLocaleDateString("fr-FR", { weekday: "long" });
-    if (!grouped[day]) grouped[day] = [];
-    grouped[day].push(emission);
-  });
-  return grouped;
-}
-
-// Fonction pour afficher un message d'erreur
-function displayErrorMessage(message) {
-  const tableBody = document.querySelector("#schedule-table tbody");
-  tableBody.innerHTML = `<tr><td colspan="4" class="error">${message}</td></tr>`;
-}
-
-// Charger les horaires lorsque la page s'affiche
-document.addEventListener("DOMContentLoaded", () => {
-  fetchWeeklySchedule();
-});
+document.addEventListener("DOMContentLoaded", afficherHoraires);
