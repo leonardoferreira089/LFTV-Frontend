@@ -49,37 +49,47 @@ document.addEventListener('DOMContentLoaded', function() {
     if (formInscription) {
         formInscription.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
+            // Récupération des données du formulaire
             const formData = new FormData(this);
             const data = {
                 username: formData.get('username'),
                 email: formData.get('email'),
                 password: formData.get('password')
             };
-            
+
+            console.log("Données d'inscription envoyées :", data); // Debugging
+
             try {
-                const response = await fetch(`${API_URL}/User`, {
+                // Appel à l'API pour l'enregistrement
+                const response = await fetch(`${API_URL}/register`, {
                     method: "POST",
-                    headers: { 
+                    headers: {
                         "Content-Type": "application/json",
                         "Accept": "application/json"
                     },
                     body: JSON.stringify(data)
                 });
+
+                console.log("Statut de la réponse :", response.status); // Debugging
                 
                 if (!response.ok) {
                     const error = await response.json();
-                    throw new Error(error.message || "Erreur d'inscription");
+                    throw new Error(error.message || "Erreur lors de l'inscription");
                 }
-                
+
                 const result = await response.json();
+                console.log("Réponse réussie :", result); // Debugging
+
                 alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
-                window.location.href = "connexion.html";
                 
+                // Redirection vers la page de connexion
+                window.location.href = "connexion.html";
+
             } catch (err) {
-                console.error("Erreur:", err);
+                console.error("Erreur :", err); // Debugging
                 alert(`Erreur : ${err.message}`);
             }
-        });
+        })
     }
 });
