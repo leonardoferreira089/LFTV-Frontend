@@ -1,60 +1,100 @@
-const API_URL = "https://localhost:7279/api/CalendarEntry";
+const API_URL = "https://localhost:7279/api/Emission";
 
-async function chargerHoraires() {
+async function chargerEmissions() {
     try {
         const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Erreur lors du chargement des horaires");
-        return await response.json();
-    } catch (e) {
-        console.error(e);
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const emissions = await response.json();
+        return emissions;
+    } catch (error) {
+        console.error("Erreur lors du chargement des émissions :", error);
         return [];
     }
 }
 
 async function afficherHoraires() {
-    const container = document.getElementById("calendar-table-container");
-    container.innerHTML = '<p class="horaires-loading">Chargement des horaires...</p>';
+    const container = document.getElementById("horaires-table-container");
+    const message = document.getElementById("horaires-message");
 
-    const horaires = await chargerHoraires();
+    // Affiche un message de chargement
+    message.textContent = "Chargement des horaires...";
+    container.innerHTML = "";
 
-    if (!horaires || horaires.length === 0) {
-        container.innerHTML = '<p class="horaires-loading">Aucun horaire disponible.</p>';
+    const emissions = await chargerEmissions();
+
+    if (emissions.length === 0) {
+        message.textContent = "Aucun programme disponible pour le moment.";
         return;
     }
+
+    message.textContent = ""; // Efface les messages
 
     const jours = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
     const horairesParJour = {};
 
-    // Regrouper les horaires par jour
-    jours.forEach(j => horairesParJour[j] = []);
-    horaires.forEach(horaire => {
-        const jour = jours[horaire.day - 1]; // day est basé sur 1 (Lundi=1, etc.)
+    // Initialise les jours
+    jours.forEach(jour => {
+        horairesParJour[jour] = [];
+    });
+
+    // Regroupe les émissions par jour
+    emissions.forEach(emission => {
+        // Attention ici : Corrigez l'index pour l'adapter aux jours correctement
+        const jour = jours[emission.jour - 0]; // Assurez-vous que `jour` dans l'API commence à 1
         if (jour) {
             horairesParJour[jour].push({
-                heure: horaire.startTime,
-                titre: horaire.title
+                nom: emission.name,
+                heureDebut: emission.startTime,
+                heureFin: emission.endTime
             });
         }
     });
 
-    // Créer le tableau HTML
-    let html = '<table class="horaires-table"><thead><tr><th>Heure</th>';
-    jours.forEach(j => html += `<th>${j}</th>`);
-    html += '</tr></thead><tbody>';
-
-    // Trouver toutes les heures uniques
-    const toutesLesHeures = [...new Set(horaires.map(h => h.startTime))].sort();
-
-    toutesLesHeures.forEach(heure => {
-        html += `<tr><td>${heure}</td>`;
-        jours.forEach(jour => {
-            const programme = horairesParJour[jour].find(p => p.heure === heure);
-            html += `<td>${programme ? programme.titre : ''}</td>`;
-        });
-        html += '</tr>';
+    // Trie les émissions par ordre croissant des heures
+    jours.forEach(jour => {
+        horairesParJour[jour].sort((a, b) => a.heureDebut.localeCompare(b.heureDebut));
     });
 
-    html += '</tbody></table>';
+    // Génère le tableau HTML
+    let html = `
+        <table class="horaires-table">
+            <thead>
+                <tr>
+                    ${jours.map(jour => `<th>${jour}</th>`).join('')}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+    `;
+
+    // Ajoute les programmes par jour
+    jours.forEach(jour => {
+        const programmes = horairesParJour[jour];
+        if (programmes.length === 0) {
+            html += `<td class="empty-cell">Aucun programme</td>`;
+        } else {
+            html += `
+                <td>
+                    ${programmes
+                        .map(programme => `
+                            <div class="programme-cell">
+                                <strong>${programme.nom}</strong><br>
+                                ${programme.heureDebut} - ${programme.heureFin}
+                            </div>
+                        `)
+                        .join("")}
+                </td>
+            `;
+        }
+    });
+
+    html += `
+                </tr>
+            </tbody>
+        </table>
+    `;
     container.innerHTML = html;
 }
 
