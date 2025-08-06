@@ -1,47 +1,96 @@
-// URL de base de l'API
-const API_BASE_URL = "https://localhost:7279/api";
+const API_URL = "https://localhost:7279/api/Emission"; // URL de l'API pour récupérer les émissions
 
-// Fonction pour charger une émission spécifique
-async function fetchEmissionById(emissionId) {
-  try {
-    // Appel à l'API pour récupérer les données de l'émission
-    const response = await fetch(`${API_BASE_URL}/Emission/${emissionId}`);
+// Fonction pour récupérer les émissions depuis l'API
+async function chargerEmissions() {
+    try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        const emissions = await response.json();
+        return emissions;
+    } catch (error) {
+        console.error("Erreur lors du chargement des émissions :", error);
+        return [];
+    }
+}
 
-    // Vérification du statut de la réponse
-    if (!response.ok) {
-      throw new Error("Erreur lors du chargement de l'émission.");
+// Fonction pour obtenir le jour actuel en base 1 (1 = Lundi, ..., 7 = Dimanche)
+function getJourActuel() {
+    const now = new Date();
+    const dayBase0 = now.getDay(); // getDay() retourne 0 (Dimanche) à 6 (Samedi)
+
+    // Convertir en base 1 où 1 = Lundi, ..., 7 = Dimanche
+    return dayBase0 === 1 ? 7 : dayBase0;
+}
+
+// Fonction pour vérifier si une émission est actuellement diffusée
+function estEnCours(heureDebut, heureFin) {
+    const now = new Date();
+    const debut = new Date();
+    const fin = new Date();
+
+    // Convertir les heures de début et de fin en objets Date
+    const [debutHeures, debutMinutes] = heureDebut.split(":").map(Number);
+    const [finHeures, finMinutes] = heureFin.split(":").map(Number);
+
+    debut.setHours(debutHeures, debutMinutes, 0, 0);
+    fin.setHours(finHeures, finMinutes, 0, 0);
+
+    // Vérifier si l'heure actuelle est entre l'heure de début et de fin
+    return now >= debut && now <= fin;
+}
+
+// Fonction pour afficher l'émission actuellement diffusée
+function afficherEmissionEnCours(emission) {
+    const broadcastBox = document.querySelector(".broadcast-box");
+
+    // Met à jour le contenu de l'émission en cours
+    broadcastBox.innerHTML = `
+        <img src="${emission.imageUrl || 'images/default-show.jpg'}" alt="${emission.name}">
+        <h2>${emission.name}</h2>
+        <a href="#" class="watch-now-btn">Regarder maintenant</a>
+    `;
+}
+
+// Fonction pour afficher le programme du jour
+function afficherProgrammeDuJour(emissions) {
+    const scheduleList = document.querySelector(".today-schedule");
+    scheduleList.innerHTML = "";
+
+    emissions.forEach(emission => {
+        const listItem = document.createElement("li");
+        listItem.textContent = `${emission.startTime} - ${emission.name}`;
+        scheduleList.appendChild(listItem);
+    });
+}
+
+// Fonction principale pour charger et afficher les données
+async function afficherDonnees() {
+    const emissions = await chargerEmissions();
+    const jourActuel = getJourActuel(); // Obtenir le jour actuel (1 = Lundi, ..., 7 = Dimanche)
+
+    console.log("Jour actuel (base 1) :", jourActuel); // Debug : Vérifiez que le jour actuel est correct
+
+    // Filtrer les émissions du jour actuel
+    const emissionsDuJour = emissions.filter(emission => emission.jour === jourActuel);
+
+    // Trouver l'émission actuellement diffusée
+    const emissionEnCours = emissionsDuJour.find(emission =>
+        estEnCours(emission.startTime, emission.endTime)
+    );
+
+    // Afficher l'émission en cours
+    if (emissionEnCours) {
+        afficherEmissionEnCours(emissionEnCours);
+    } else {
+        const broadcastBox = document.querySelector(".broadcast-box");
+        broadcastBox.innerHTML = `<p>Pas d'émission en cours pour le moment.</p>`;
     }
 
-    // Conversion de la réponse en JSON
-    const emission = await response.json();
-
-    // Mise à jour de l'interface utilisateur
-    updateCurrentBroadcastUI(emission);
-  } catch (error) {
-    console.error(error.message);
-    displayErrorMessage("Impossible de charger les informations de l'émission.");
-  }
+    // Afficher le programme du jour
+    afficherProgrammeDuJour(emissionsDuJour);
 }
 
-// Fonction pour mettre à jour l'interface utilisateur avec l'émission récupérée
-function updateCurrentBroadcastUI(emission) {
-  const currentBroadcastBox = document.querySelector(".broadcast-box");
-  currentBroadcastBox.innerHTML = `
-    <img src="${emission.imageUrl || "images/default-image.jpg"}" alt="${emission.name}">
-    <h2>${emission.name}</h2>
-    <p>Horaire : ${emission.startTime} - ${emission.endTime}</p>
-    <a href="#" class="watch-now-btn">Regarder maintenant</a>
-  `;
-}
-
-// Fonction pour afficher un message d'erreur
-function displayErrorMessage(message) {
-  const currentBroadcastBox = document.querySelector(".broadcast-box");
-  currentBroadcastBox.innerHTML = `<p class="error">${message}</p>`;
-}
-
-// Charger l'émission lorsque la page s'affiche
-document.addEventListener("DOMContentLoaded", () => {
-  const emissionId = 43; // ID de l'émission à charger
-  fetchEmissionById(emissionId);
-});
+// Charger les données au chargement de la page
+document.addEventListener("DOMContentLoaded", afficherDonnees);
