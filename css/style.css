@@ -16,10 +16,9 @@ body {
     padding: 10px 20px;
 }
 
-.logo {
-    font-size: 1.5em;
-    color: #FFF936;
-    /* Jaune Néon */
+.logo img {
+    width: 130px;        
+    height: auto;        
 }
 
 .menu {
@@ -64,21 +63,31 @@ body {
 .broadcast-box {
     margin: auto;
     background-color: #1A3E66;
-    /* Fond secondaire */
-    padding: 20px;
+    width: 970px;
+    height: 576px;
+    padding: 0px;
     border-radius: 10px;
 }
 
 .broadcast-box img {
+    transform: scaleX(1.080);
     width: 100%;
-    max-width: 400px;
+    max-width: 900px;    
     display: block;
     margin: auto;
 }
 
+.broadcast-box .info-row {
+    display: flex;
+    align-items: center;
+    padding-left: 5%;
+    gap: 10px;
+    /* espaço entre o nome e o botão */
+}
+
 .watch-now-btn {
     display: inline-block;
-    margin-top: 15px;
+    margin-top: 10px;
     padding: 10px 20px;
     background-color: #3399FF;
     /* Boutons */
@@ -94,18 +103,28 @@ body {
     /* Danger/hover */
 }
 
-.today-schedule {
-    list-style: none;
-    padding: 0;
-    margin-top: 20px;
+.today-schedule {    
+    margin: 20px auto;
+        /* centraliza horizontalmente */
+        width: 970px;
+        /* igual ao .broadcast-box */
+        padding: 20px;
+        background-color: #1A3E66;
+        border-radius: 10px;
 }
 
 .today-schedule li {
     background-color: #1A3E66;
-    /* Fond secondaire */
-    margin: 5px auto;
-    padding: 10px;
-    border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        color: #fff;
+        /* opcional, para o texto ficar visível */
+        margin-bottom: 10px;
+        /* espaço entre os itens */
 }
 
 .auth-container {

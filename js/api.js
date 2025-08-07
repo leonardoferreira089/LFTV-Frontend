@@ -45,13 +45,15 @@ function estEnCours(heureDebut, heureFin) {
 function afficherEmissionEnCours(emission) {
     const broadcastBox = document.querySelector(".broadcast-box");
 
-    // Met à jour le contenu de l'émission en cours
     broadcastBox.innerHTML = `
         <img src="${emission.imageUrl || 'images/default-show.jpg'}" alt="${emission.name}">
-        <h2>${emission.name}</h2>
-        <a href="#" class="watch-now-btn">Regarder maintenant</a>
+        <div class="info-row">
+            <h2>${emission.name}</h2>
+            <a href="#" class="watch-now-btn">Regarder maintenant</a>
+        </div>
     `;
 }
+
 
 // Fonction pour afficher le programme du jour
 function afficherProgrammeDuJour(emissions) {
