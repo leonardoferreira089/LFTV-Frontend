@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test Modal</title>
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            width: 350px;
+            border-radius: 8px;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="document.getElementById('emissionModal').style.display = 'block'">Ouvrir modal</button>
+    <div id="emissionModal" class="modal">
+        <div class="modal-content">
+            <h2>Modal Émission</h2>
+            <button onclick="document.getElementById('emissionModal').style.display = 'none'">Fermer</button>
+        </div>
+    </div>
+</body>
+
+</html>

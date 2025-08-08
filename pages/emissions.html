@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LFTV - Émissions</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/emission.css">
 </head>
 
 <body>
     <!-- Barre de navigation -->
     <nav class="navbar">
         <div class="logo">
-            <img src="../assets/img/LFTV.png">
+            <img src="../assets/img/LFTV.png" alt="LFTV Logo">
         </div>
         <ul class="menu">
             <li><a href="../index.html">Accueil</a></li>
@@ -27,18 +28,40 @@
 
     <!-- Section principale -->
     <main>
+        <header class="emissions-header">
+            <h1>Gestion des Émissions</h1>
+            <button id="addEmissionBtn" class="btn-primary">Ajouter une émission</button>
+        </header>
         <section class="emissions-section">
-            <h1>Catalogue des Émissions</h1>
-    
-            <!-- Formulaire pour créer une nouvelle émission -->
-            <form id="create-emission-form">
-                <h2>Ajouter une nouvelle émission</h2>
+            <table class="emissions-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Jour</th>
+                        <th>Heure début</th>
+                        <th>Heure fin</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="emissionsTbody">
+                    <!-- Rempli dynamiquement -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modal Création/Édition -->
+    <div id="emissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Nouvelle Émission</h2>
+            <form id="emissionForm">
+                <input type="hidden" id="emissionId">
                 <label for="name">Nom :</label>
-                <input type="text" id="name" name="name" required>
-    
-                <!-- Sélection des jours de la semaine -->
+                <input type="text" id="name" required>
                 <label for="jour">Jour :</label>
-                <select id="jour" name="jour" required>
+                <select id="jour" required>
                     <option value="1">Lundi</option>
                     <option value="2">Mardi</option>
                     <option value="3">Mercredi</option>
@@ -47,26 +70,27 @@
                     <option value="6">Samedi</option>
                     <option value="7">Dimanche</option>
                 </select>
-    
-                <label for="startTime">Heure de début :</label>
-                <input type="time" id="startTime" name="startTime" required>
-    
-                <label for="endTime">Heure de fin :</label>
-                <input type="time" id="endTime" name="endTime" required>
-    
-                <label for="imageUrl">URL de l'image :</label>
-                <input type="url" id="imageUrl" name="imageUrl">
-    
-                <button type="submit">Ajouter</button>
+                <label for="startTime">Heure début :</label>
+                <input type="time" id="startTime" required>
+                <label for="endTime">Heure fin :</label>
+                <input type="time" id="endTime" required>
+                <label for="imageUrl">Image (URL) :</label>
+                <input type="url" id="imageUrl" placeholder="https://...">
+                <button type="submit" class="btn-primary" id="saveBtn">Enregistrer</button>
             </form>
-    
-            <!-- Liste des émissions -->
-            <h2>Liste des émissions existantes</h2>
-            <ul id="emissions-list">
-                <!-- Les émissions seront générées dynamiquement -->
-            </ul>
-        </section>
-    </main>
+        </div>
+    </div>
+
+    <!-- Modal Confirmation Suppression -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <p>Voulez-vous vraiment supprimer cette émission ?</p>
+            <div class="modal-actions">
+                <button id="confirmDeleteBtn" class="btn-danger">Supprimer</button>
+                <button id="cancelDeleteBtn" class="btn-secondary">Annuler</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/emissions.js"></script>
 </body>

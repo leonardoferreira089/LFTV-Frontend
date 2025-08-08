@@ -1,88 +1,140 @@
-// URL de base de l'API
-const API_BASE_URL = "https://localhost:7279/api/Emission";
+const API_URL = "https://localhost:7279/api/Emission";
+const JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
 
-// === Fonction pour récupérer toutes les émissions ===
+let editMode = false;
+let currentEditId = null;
+let currentDeleteId = null;
+
+// --- Load & Display ---
 async function fetchEmissions() {
     try {
-        const response = await fetch(API_BASE_URL);
-        if (!response.ok) throw new Error("Erreur lors du chargement des émissions.");
-        const emissions = await response.json();
-        updateEmissionsList(emissions);
-    } catch (error) {
-        console.error(error.message);
-        displayErrorMessage("Impossible de charger les émissions.");
+        const res = await fetch(API_URL);
+        return await res.json();
+    } catch {
+        alert("Erreur lors du chargement des émissions.");
+        return [];
     }
 }
-
-// === Fonction pour ajouter une nouvelle émission ===
-async function createEmission(emissionData) {
-    try {
-        const response = await fetch(API_BASE_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(emissionData),
-        });
-
-        if (!response.ok) throw new Error("Erreur lors de l'ajout de l'émission.");
-
-        const newEmission = await response.json();
-        afficherEmission(newEmission); // Ajout dynamique
-        document.getElementById("create-emission-form").reset(); // Réinitialiser le formulaire
-    } catch (error) {
-        console.error(error.message);
-        alert("Impossible d'ajouter l'émission.");
-    }
+function jourToString(jour) {
+    return JOURS[(jour-1)];
 }
-
-// === Fonction pour mettre à jour la liste des émissions dans l'UI ===
-function updateEmissionsList(emissions) {
-    const emissionsList = document.getElementById("emissions-list");
-    emissionsList.innerHTML = ""; // Vidage de la liste existante
-
-    emissions.forEach((emission) => {
-        afficherEmission(emission);
+function renderTable(emissions) {
+    const tbody = document.getElementById("emissionsTbody");
+    tbody.innerHTML = "";
+    emissions.forEach(em => {
+        tbody.innerHTML += `
+        <tr>
+            <td>${em.name}</td>
+            <td>${jourToString(em.jour)}</td>
+            <td>${em.startTime ? em.startTime.slice(0,5) : ''}</td>
+            <td>${em.endTime ? em.endTime.slice(0,5) : ''}</td>
+            <td><img src="${em.imageUrl || 'images/default-show.jpg'}" class="thumbnail" alt="img"></td>
+            <td>
+                <button class="action-btn edit" onclick="openEditModal(${em.id})">Modifier</button>
+                <button class="action-btn delete" onclick="openDeleteModal(${em.id})">Supprimer</button>
+            </td>
+        </tr>`;
     });
 }
 
-// === Fonction pour afficher une émission dans la liste ===
-function afficherEmission(emission) {
-    const emissionsList = document.getElementById("emissions-list");
-    const listItem = document.createElement("li");
-    listItem.innerHTML = `
-        <h3>${emission.name}</h3>
-        <p>Jour : ${getDayName(emission.jour)}</p>
-        <p>Horaire : ${emission.startTime} - ${emission.endTime}</p>
-        <img src="${emission.imageUrl || 'https://via.placeholder.com/150'}" alt="Image de l'émission" width="150">
-    `;
-    emissionsList.appendChild(listItem);
+// --- CRUD Modals ---
+function openCreateModal() {
+    editMode = false;
+    document.getElementById("modalTitle").textContent = "Nouvelle Émission";
+    document.getElementById("emissionForm").reset();
+    document.getElementById("emissionId").value = "";
+    document.getElementById("emissionModal").style.display = "block";
+}
+async function openEditModal(id) {
+    editMode = true;
+    document.getElementById("modalTitle").textContent = "Modifier Émission";
+    const res = await fetch(`${API_URL}/${id}`);
+    const em = await res.json();
+    document.getElementById("emissionId").value = em.id;
+    document.getElementById("name").value = em.name;
+    document.getElementById("jour").value = em.jour;
+    document.getElementById("startTime").value = em.startTime.slice(0,5);
+    document.getElementById("endTime").value = em.endTime.slice(0,5);
+    document.getElementById("imageUrl").value = em.imageUrl || "";
+    document.getElementById("emissionModal").style.display = "block";
+}
+function closeModal() {
+    document.getElementById("emissionModal").style.display = "none";
+}
+function openDeleteModal(id) {
+    currentDeleteId = id;
+    document.getElementById("deleteModal").style.display = "block";
+}
+function closeDeleteModal() {
+    currentDeleteId = null;
+    document.getElementById("deleteModal").style.display = "none";
 }
 
-// === Fonction pour convertir l'index du jour en nom (français) ===
-function getDayName(index) {
-    const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"];
-    return days[index];
+// --- CRUD API Calls ---
+async function saveEmission(e) {
+    e.preventDefault();
+    const id = document.getElementById("emissionId").value;
+    const name = document.getElementById("name").value.trim();
+    const jour = parseInt(document.getElementById("jour").value);
+    const startTime = document.getElementById("startTime").value;
+    const endTime = document.getElementById("endTime").value;
+    const imageUrl = document.getElementById("imageUrl").value.trim();
+
+    const emission = { name, jour, startTime, endTime, imageUrl };
+
+    let method, url;
+    if (editMode && id) {
+        method = "PUT";
+        url = `${API_URL}/${id}`;
+        emission.id = parseInt(id);
+    } else {
+        method = "POST";
+        url = API_URL;
+    }
+    try {
+        const res = await fetch(url, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(emission)
+        });
+        if (!res.ok) throw new Error();
+        closeModal();
+        loadAndRender();
+    } catch {
+        alert("Erreur lors de l'enregistrement.");
+    }
 }
 
-// === Fonction pour afficher un message d'erreur ===
-function displayErrorMessage(message) {
-    const emissionsList = document.getElementById("emissions-list");
-    emissionsList.innerHTML = `<li class="error">${message}</li>`;
+async function deleteEmission() {
+    if (!currentDeleteId) return;
+    try {
+        const res = await fetch(`${API_URL}/${currentDeleteId}`, { method: "DELETE" });
+        if (!res.ok) throw new Error();
+        closeDeleteModal();
+        loadAndRender();
+    } catch {
+        alert("Erreur lors de la suppression.");
+    }
 }
 
-// === Gérer le formulaire de création d'émission ===
-document.getElementById("create-emission-form").addEventListener("submit", (event) => {
-    event.preventDefault();
+// --- Events ---
+document.getElementById("addEmissionBtn").onclick = openCreateModal;
+document.getElementById("closeModal").onclick = closeModal;
+document.getElementById("emissionForm").onsubmit = saveEmission;
+document.getElementById("confirmDeleteBtn").onclick = deleteEmission;
+document.getElementById("cancelDeleteBtn").onclick = closeDeleteModal;
 
-    const emissionData = {
-        name: event.target.name.value,
-        jour: parseInt(event.target.jour.value), // Correspond à l'index de DayOfWeekEnum
-        startTime: event.target.startTime.value,
-        endTime: event.target.endTime.value,
-        imageUrl: event.target.imageUrl.value,
-    };
+window.onclick = function(event) {
+    if (event.target === document.getElementById("emissionModal")) closeModal();
+    if (event.target === document.getElementById("deleteModal")) closeDeleteModal();
+};
 
-    createEmission(emissionData);
-});
+// --- Main ---
+async function loadAndRender() {
+    const emissions = await fetchEmissions();
+    renderTable(emissions);
+}
+window.openEditModal = openEditModal; // pour inline onclick
+window.openDeleteModal = openDeleteModal;
 
-// Charger les émissions au démarrage
-document.addEventListener("DOMContentLoaded", fetchEmissions);
+document.addEventListener("DOMContentLoaded", loadAndRender);
