@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LFTV - Programmes</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/programmes.css">
 </head>
 
 <body>
@@ -27,42 +28,65 @@
 
     <!-- Section principale -->
     <main>
+        <header class="programmes-header">
+            <h1>Gestion des Programmes</h1>
+            <button id="addProgrammeBtn" class="btn-primary">Ajouter un programme</button>
+        </header>
         <section class="programmes-section">
-            <h1>Catalogue des Programmes</h1>
-
-            <!-- Formulaire pour créer un nouveau programme -->
-            <form id="create-programme-form">
-                <h2>Ajouter un nouveau programme</h2>
-                <label for="name">Nom du programme :</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="type">Type :</label>
-                <input type="text" id="type" name="type" required>
-
-                <label for="category">Catégorie :</label>
-                <input type="text" id="category" name="category" required>
-
-                <label for="emissionId">Émission :</label>
-                <select id="emissionId" name="emissionId" required>
-                    <!-- Les options seront générées dynamiquement -->
-                </select>
-
-                <label for="episodeUrl">URL de l'épisode :</label>
-                <input type="url" id="episodeUrl" name="episodeUrl">
-
-                <label for="imageUrl">URL de l'image :</label>
-                <input type="url" id="imageUrl" name="imageUrl">
-
-                <button type="submit">Ajouter</button>
-            </form>
-
-            <!-- Liste des programmes -->
-            <h2>Liste des programmes existants</h2>
-            <ul id="programmes-list">
-                <!-- Les programmes seront générés dynamiquement -->
-            </ul>
+            <table class="programmes-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Catégorie</th>
+                        <th>Émission</th>
+                        <th>Lien de l'épisode</th>
+                        <th>Image</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="programmesTbody">
+                    <!-- Rempli dynamiquement -->
+                </tbody>
+            </table>
         </section>
     </main>
+    
+    <!-- Modal Création/Édition -->
+    <div id="programmeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeProgrammeModal">&times;</span>
+            <h2 id="programmeModalTitle">Nouveau Programme</h2>
+            <tbody id="programmesTbody"></tbody>
+            <form id="programmeForm">
+                <input type="hidden" id="programmeId">
+                <label for="programmeName">Nom :</label>
+                <input type="text" id="programmeName" required>
+                <label for="programmeType">Type :</label>
+                <input type="text" id="programmeType" required>
+                <label for="programmeCategorie">Catégorie :</label>
+                <input type="text" id="programmeCategorie" required>
+                <label for="programmeEmission">Émission :</label>
+                <select id="programmeEmission" required></select>
+                <label for="programmeLien">Lien de l'épisode :</label>
+                <input type="url" id="programmeLien" placeholder="https://..." required>
+                <label for="programmeImageUrl">Image (URL) :</label>
+                <input type="url" id="programmeImageUrl" placeholder="https://...">
+                <button type="submit" class="btn-primary" id="saveProgrammeBtn">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Confirmation Suppression -->
+    <div id="deleteProgrammeModal" class="modal">
+        <div class="modal-content">
+            <p>Voulez-vous vraiment supprimer ce programme ?</p>
+            <div class="modal-actions">
+                <button id="confirmDeleteProgrammeBtn" class="btn-danger">Supprimer</button>
+                <button id="cancelDeleteProgrammeBtn" class="btn-secondary">Annuler</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/programmes.js"></script>
 </body>
