@@ -39,10 +39,9 @@ async function afficherHoraires() {
         horairesParJour[jour] = [];
     });
 
-    // Regroupe les émissions par jour
+    // Regroupe les émissions par jour (ATTENTION: emission.jour = 0 pour Lundi, etc.)
     emissions.forEach(emission => {
-        // Attention ici : Corrigez l'index pour l'adapter aux jours correctement
-        const jour = jours[emission.jour - 0]; // Assurez-vous que `jour` dans l'API commence à 1
+        const jour = jours[emission.jour]; // emission.jour doit être 0 (Lundi) à 6 (Dimanche)
         if (jour) {
             horairesParJour[jour].push({
                 nom: emission.name,
@@ -57,6 +56,9 @@ async function afficherHoraires() {
         horairesParJour[jour].sort((a, b) => a.heureDebut.localeCompare(b.heureDebut));
     });
 
+    // Trouver le nombre maximum de programmes dans une journée
+    const maxProgrammes = Math.max(...jours.map(jour => horairesParJour[jour].length));
+
     // Génère le tableau HTML
     let html = `
         <table class="horaires-table">
@@ -66,32 +68,30 @@ async function afficherHoraires() {
                 </tr>
             </thead>
             <tbody>
-                <tr>
     `;
 
-    // Ajoute les programmes par jour
-    jours.forEach(jour => {
-        const programmes = horairesParJour[jour];
-        if (programmes.length === 0) {
-            html += `<td class="empty-cell">Aucun programme</td>`;
-        } else {
-            html += `
-                <td>
-                    ${programmes
-                        .map(programme => `
-                            <div class="programme-cell">
-                                <strong>${programme.nom}</strong><br>
-                                ${programme.heureDebut} - ${programme.heureFin}
-                            </div>
-                        `)
-                        .join("")}
-                </td>
-            `;
-        }
-    });
+    // Pour chaque ligne (horaire), affiche le i-ème programme de chaque jour
+    for (let i = 0; i < maxProgrammes; i++) {
+        html += "<tr>";
+        jours.forEach(jour => {
+            const programme = horairesParJour[jour][i];
+            if (programme) {
+                html += `
+                    <td>
+                        <div class="programme-cell">
+                            <strong>${programme.nom}</strong><br>
+                            ${programme.heureDebut} - ${programme.heureFin}
+                        </div>
+                    </td>
+                `;
+            } else {
+                html += `<td class="empty-cell"></td>`;
+            }
+        });
+        html += "</tr>";
+    }
 
     html += `
-                </tr>
             </tbody>
         </table>
     `;

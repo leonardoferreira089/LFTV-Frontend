@@ -212,26 +212,23 @@ body {
 .horaires-table {
     width: 100%;
     border-collapse: collapse;
-    background: var(--fond-carte);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    background: #0052A1; 
 }
 
 .horaires-table th,
 .horaires-table td {
-    border: 1px solid var(--bouton-hover);
-    padding: 1rem 0.5rem;
-    text-align: center;
-    color: var(--texte-principal);
-    font-size: 1.06rem;
+    padding: 10px 0px 5px 10px;
+    border: 2px solid #fff;
+        /* même taille de bordure partout */
+    background: #004282;
+    color: #fff;
+
 }
 
 .horaires-table th {
-    background: var(--fond-principal);
-    color: var(--accent-principal);
-    font-size: 1.12rem;
-    letter-spacing: 0.5px;
+    background-color: #0052A1;
+        color: #fff;
+        text-align: center;
 }
 
 .horaires-table tr:nth-child(even) td {
@@ -247,4 +244,16 @@ body {
     font-size: 1.2rem;
     color: var(--accent-principal);
     margin-top: 2rem;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.footer-content
+{
+    text-align: center;
+    margin-top: 2%;
 }
