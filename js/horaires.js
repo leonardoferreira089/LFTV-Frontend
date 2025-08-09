@@ -39,9 +39,33 @@ async function afficherHoraires() {
         horairesParJour[jour] = [];
     });
 
-    // Regroupe les émissions par jour (ATTENTION: emission.jour = 0 pour Lundi, etc.)
     emissions.forEach(emission => {
-        const jour = jours[emission.jour]; // emission.jour doit être 0 (Lundi) à 6 (Dimanche)
+    // Cas "Du lundi au vendredi" (ex: emission.jour == 8)
+    if (emission.jour == 8 || emission.jour === "8" || emission.jour === "weekdays") {
+        // Pour Lundi à Vendredi (index 0 à 4)
+        for (let i = 0; i < 5; i++) {
+            horairesParJour[jours[i]].push({
+                nom: emission.name,
+                heureDebut: emission.startTime,
+                heureFin: emission.endTime
+            });
+        }
+    }
+    // Cas "Samedi et dimanche" (ex: emission.jour == 9)
+    else if (emission.jour == 9 || emission.jour === "9" || emission.jour === "weekend") {
+        // Samedi (index 5) et Dimanche (index 6)
+        for (let i = 5; i < 7; i++) {
+            horairesParJour[jours[i]].push({
+                nom: emission.name,
+                heureDebut: emission.startTime,
+                heureFin: emission.endTime
+            });
+        }
+    }
+    // Cas normal : un seul jour
+    else {
+        const jourIndex = parseInt(emission.jour, 10) - 1;
+        const jour = jours[jourIndex];
         if (jour) {
             horairesParJour[jour].push({
                 nom: emission.name,
@@ -49,7 +73,8 @@ async function afficherHoraires() {
                 heureFin: emission.endTime
             });
         }
-    });
+    }
+});
 
     // Trie les émissions par ordre croissant des heures
     jours.forEach(jour => {

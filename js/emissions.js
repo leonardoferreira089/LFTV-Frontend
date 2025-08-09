@@ -16,7 +16,12 @@ async function fetchEmissions() {
     }
 }
 function jourToString(jour) {
-    return JOURS[(jour-1)];
+    if (jour === 8 || jour === "8") return "Du lundi au vendredi";
+    if (jour === 9 || jour === "9") return "Samedi et dimanche";
+    // Si backend renvoie une chaîne
+    if (jour === "weekdays") return "Du lundi au vendredi";
+    if (jour === "weekend") return "Samedi et dimanche";
+    return JOURS[(jour-1)] || "";
 }
 function renderTable(emissions) {
     const tbody = document.getElementById("emissionsTbody");
@@ -75,7 +80,8 @@ async function saveEmission(e) {
     e.preventDefault();
     const id = document.getElementById("emissionId").value;
     const name = document.getElementById("name").value.trim();
-    const jour = parseInt(document.getElementById("jour").value);
+    const jourValue = document.getElementById("jour").value;
+    let jour = isNaN(parseInt(jourValue)) ? jourValue : parseInt(jourValue);
     const startTime = document.getElementById("startTime").value;
     const endTime = document.getElementById("endTime").value;
     const imageUrl = document.getElementById("imageUrl").value.trim();
