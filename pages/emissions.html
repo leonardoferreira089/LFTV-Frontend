@@ -40,6 +40,7 @@
                         <th>Jour</th>
                         <th>Heure début</th>
                         <th>Heure fin</th>
+                        <th>Programme associé</th> <!-- NOUVELLE COLONNE -->
                         <th>Image</th>
                         <th>Actions</th>
                     </tr>
@@ -69,12 +70,17 @@
                     <option value="5">Vendredi</option>
                     <option value="6">Samedi</option>
                     <option value="7">Dimanche</option>
-                        <option value="8">Du lundi au vendredi</option>                         <option value="9">Samedi et dimanche</option>
+                    <option value="8">Du lundi au vendredi</option>
+                    <option value="9">Samedi et dimanche</option>
                 </select>
                 <label for="startTime">Heure début :</label>
                 <input type="time" id="startTime" required>
                 <label for="endTime">Heure fin :</label>
                 <input type="time" id="endTime" required>
+                <label for="programme">Programme associé :</label>
+                <select id="programme" name="programme" required>
+                    <!-- Options générées dynamiquement via JS -->
+                </select>
                 <label for="imageUrl">Image (URL) :</label>
                 <input type="url" id="imageUrl" placeholder="https://...">
                 <button type="submit" class="btn-primary" id="saveBtn">Enregistrer</button>
